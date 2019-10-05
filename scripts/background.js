@@ -22,18 +22,18 @@ var updateController = (function () {
 
         var startMonitoring = function(data){
             if(!isRegistered(data.tab.id)){
-                registeredTabs[data.tab.id] = new State(data.tad.id, data.interval);
+                registeredTabs[data.tab.id] = new State(data.tab.id, +data.interval);
             }
-            var state = new State(data.tad.id,+data.interval);
+            var state = registeredTabs[data.tab.id];
+            state.interval = +data.interval;
             state.tabUrl = data.tab.url;
             //state.timer = setInterval('updateTab(' + state.tabId + ')',state.interval * 1000);
             state.isRunning = true;
-            registeredTabs[state.tabId] = state;
         };
 
         var stopMonitoring = function(data){
-            if(isRegistered(data.tab.id)){
-                var state = registeredTabs[data.tab.id];
+            var state = registeredTabs[data.tab.id];
+            if(state !== undefined){
                 clearInterval(state.timer);
                 state.timer = null;
                 state.isRunning = false;
@@ -58,6 +58,9 @@ var updateController = (function () {
             },
             start : function (data) {
                 startMonitoring(data);
+            },
+            stop: function (data) {
+                stopMonitoring(data);
             }
         }
 })();

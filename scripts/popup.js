@@ -1,6 +1,6 @@
 
-$(function () {
-    var updCtrl = chrome.runtime.getBackgroundPage().updateController;
+$(document).ready(function () {
+    var updCtrl = chrome.extension.getBackgroundPage().updateController;
     var tab = {};
     chrome.tabs.query({active:true}, tabs => {
         if(tabs.length === 0){
@@ -17,11 +17,12 @@ $(function () {
             $('#stop').addClass('disabled');
         }
     });
-    $('#start').onclick(function (ev) {
+    $('#start').click(function (ev) {
         updCtrl.start(new RegisterData(tab,$('#interval').val()));
     });
 
-    $('#stop').onclick(function (ev) {
-
+    $('#stop').click(function (ev) {
+        updCtrl.stop(new RegisterData(tab,$('#interval').val()));
     });
 });
+
