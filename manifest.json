@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "icons": { "16": "icons/favicon.png"},
+    "name": "Rev Monitor",
+    "version": "1.0",
+    "description": "Monitoring the Rev Workspace",
+    "background": {
+      "scripts": ["scripts/background.js"],
+      "persistent": false
+    },
+    "page_action":{
+        "default_icon":"icons/favicon.png",
+		"default_title":"Rev Workspace Helper",
+		"default_popup":"popup.html"
+    },
+    "content_scripts": [
+      {
+          "matches":["https://www.rev.com/workspace/*"],
+          "js": ["libs/jquery/jquery-3.4.0.js", "scripts/content.js"]
+      }
+    ],
+    "permissions":[
+		"tabs",
+        "background",
+		"https://www.rev.com/*"
+	]
+
+}
