@@ -8,6 +8,79 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
 });
 
+var notificationController = (function () {
+
+    var messages = {
+        one: "One project was claimed.",
+        more: ' projects were claimed.'
+    };
+
+    var opts = {
+        notification: false,
+        audioNotification: false,
+        soundName: ''
+    };
+
+    chrome.storage.sync.get([Settings.notificationEnabled,
+                                   Settings.soundNotificationEnabled,
+                                   Settings.soundName],function (items) {
+
+        opts.notification = items[Settings.notificationEnabled] !== undefined && items[Settings.notificationEnabled];
+        opts.audioNotification = items[Settings.soundNotificationEnabled] !== undefined && items[Settings.soundNotificationEnabled];
+        opts.soundName = items[Settings.soundName] != undefined ? items[Settings.soundName] : '';
+    });
+
+    function messageNotification(data) {
+        var opt = {
+            type: 'basic',
+            title: 'Claimed.',
+            message: data.count == 1 ? messages.one : data.count + messages.more,
+        };
+        chrome.notifications.create(opt, null);
+    }
+
+    function soundNotification() {
+        var audio = new Audio(Audios[opts.soundName]);
+        audio.play();
+    }
+
+    return {
+        claimedNotification : function (data) {
+            if(opts.notification){
+                messageNotification(data);
+            }
+            if(opts.audioNotification){
+                soundNotification();
+            }
+        },
+        foundNotification: function () {
+            if(opts.notification){
+                var opt = {
+                    type: 'basic',
+                    title: 'Found some projects',
+                    message: 'We found some unclaimed projects',
+                };
+                chrome.notifications.create(opt, null);
+            }
+        }
+    }
+})();
+
+var claimController = (function (notification) {
+
+})(notificationController);
+
+var searchController = (function (claim) {
+
+    var _this = this;
+
+    return {
+        searchProjects: function (data) {
+
+        }
+    }
+})(claimController);
+
 var updateController = (function () {
         var registeredTabs = {};
 
@@ -27,7 +100,7 @@ var updateController = (function () {
             var state = registeredTabs[data.tab.id];
             state.interval = +data.interval;
             state.tabUrl = data.tab.url;
-            //state.timer = setInterval('updateTab(' + state.tabId + ')',state.interval * 1000);
+            state.timer = setInterval('updateTab(' + state.tabId + ')',state.interval * 1000);
             state.isRunning = true;
         };
 
@@ -39,7 +112,6 @@ var updateController = (function () {
                 state.isRunning = false;
             }
         };
-
 
         var updateTab = function(tabId){
             var state = registeredTabs[tabId];
@@ -64,6 +136,3 @@ var updateController = (function () {
             }
         }
 })();
-
-
-

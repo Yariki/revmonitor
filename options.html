@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rev Monitor Options</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="libs/bootstrap/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="libs/jquery/jquery-3.4.0.js"></script>
+    <script src="libs/popper/popper.min.js"></script>
+    <script src="libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="scripts/shared.js"></script>
+    <script src="scripts/options.js"></script>
+</head>
+<body>
+    <div class="container">
+        <ul class="list-group">
+            <li class="list-group-item">
+                <div class="input-group form-check">
+                    <input type="checkbox" class="form-check-input" id="notificationEnabled" class="form-control">
+                    <label class="form-check-label" for="notificationEnabled">Enable notification</label>
+                </div>
+
+                <li class="list-group-item">
+                    <div class="input-group form-check">
+                        <input type="checkbox" class="form-check-input" id="soundNotificationEnabled" class="form-control">
+                        <label class="form-check-label" for="soundNotificationEnabled">Enable sound notification</label>
+                    </div>
+                    <div class="input-group">
+                        <select id="soundName" class="form-control">
+                            <option value="bell">bell</option>
+                            <option value="cuckoo">cuckoo</option>
+                        </select>
+                        <button class="btn btn-outline-info btn-sm" id="playSound"><span class="fas fa-play"></span></button>
+                    </div>
+                </li>
+
+            </li>
+        </ul>
+        <button id="save" class="btn btn-primary">Save</button>
+    </div>
+</body>
+</html>

@@ -6,7 +6,7 @@
     "description": "Monitoring the Rev Workspace",
     "background": {
       "scripts": ["scripts/shared.js","scripts/background.js"],
-      "persistent": false
+      "persistent": true
     },
     "page_action":{
         "default_icon":"icons/favicon.png",
@@ -19,10 +19,12 @@
           "js": ["libs/jquery/jquery-3.4.0.js", "scripts/shared.js", "scripts/content.js"]
       }
     ],
+    "options_page" : "options.html",
     "permissions":[
 		"tabs",
         "background",
-		"https://www.rev.com/*"
+		"https://www.rev.com/*",
+        "storage"
 	]
 
 }
