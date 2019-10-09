@@ -11,8 +11,27 @@ function State(tabId,interval) {
     this.tabUrl = '';
 }
 
+function RevMessage(message, payload) {
+    this.message = message;
+    this.payload = payload;
+}
+
+function RevProject(projectId,language, customerName,size, price, dueTime) {
+    this.ProjectId = projectId;
+    this.Language = language;
+    this.CustomerName = customerName;
+    this.Size = size;
+    this.Price = price;
+    this.DueTime = dueTime;
+}
+
+
 var DomStrings = {
-    projectTable: '.find-work-projects'
+    projectTable: '.find-work-projects',
+    findWorkRow: 'div.find-work-row:not(.table-header)',
+    contentRow: '.content-row',
+    dataProjectAttr: 'data-project',
+    tableCell: '.table-cell'
 };
 
 var Settings = {
@@ -20,6 +39,15 @@ var Settings = {
     soundNotificationEnabled: 'soundNotificationEnabled',
     soundName: 'soundName'
 };
+Object.freeze(Settings);
+
+var RevMessages = {
+    FreeProjects: 'freeprojects'
+};
+Object.freeze(RevMessages);
+
+
+
 
 var Audios = {
     bell : '',

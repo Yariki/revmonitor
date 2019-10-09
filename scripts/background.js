@@ -67,19 +67,25 @@ var notificationController = (function () {
 })();
 
 var claimController = (function (notification) {
-
-})(notificationController);
-
-var searchController = (function (claim) {
-
     var _this = this;
 
-    return {
-        searchProjects: function (data) {
-
+    var parseProjects = function (projects) {
+        for (let i = 0; i < projects.length; i++) {
+            console.log(projects[i]);
         }
     }
-})(claimController);
+
+    return {
+        init: function () {
+            chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
+                if(msg.message == RevMessages.FreeProjects){
+                    parseProjects(msg.payload);
+                }
+            });
+        }
+    }
+
+})(notificationController);
 
 var updateController = (function () {
         var registeredTabs = {};
@@ -136,3 +142,5 @@ var updateController = (function () {
             }
         }
 })();
+
+claimController.init();

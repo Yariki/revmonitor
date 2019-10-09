@@ -7,27 +7,36 @@
     <script src="scripts/shared.js"></script>
     <script src="scripts/popup.js"></script>
 </head>
-<body class="container">
-<div class="container is-fullwidth">
-    <div class="level">
-        <div class="level-left">
-            <div class="select is-small" >
-                <label for="interval">Interval:</label>
-                <select id="interval" name="interval">
-                    <option value="5">5</option>
-                    <option value="10">10</option>
-                    <option value="15">15</option>
-                    <option value="20">20</option>
-                    <option value="25">25</option>
-                    <option value="30">30</option>
-                </select>
+<body>
+
+    <div class="container is-fluid" style="margin: 5px">
+        <div class="level">
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label for="interval">Interval (s):</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <div class="select" >
+                                <select id="interval" name="interval">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="25">25</option>
+                                    <option value="30">30</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="level-right">
-            <button id="start"  name="start" class="button is-primary is-small">Start</button>
-            <button id="stop"  name="stop" class="button is-danger is-small">Stop</button>
+        <div class="level">
+            <button id="start"  name="start" class="button is-primary">Start</button>
+            <button id="stop"  name="stop" class="button is-danger">Stop</button>
         </div>
     </div>
-</div>
 </body>
 </html>
