@@ -106,7 +106,9 @@ var updateController = (function () {
             var state = registeredTabs[data.tab.id];
             state.interval = +data.interval;
             state.tabUrl = data.tab.url;
-            state.timer = setInterval('updateTab(' + state.tabId + ')',state.interval * 1000);
+            state.timer = setInterval(function () {
+                updateTab(state.tabId);
+            },state.interval * 1000);
             state.isRunning = true;
         };
 
@@ -121,10 +123,11 @@ var updateController = (function () {
 
         var updateTab = function(tabId){
             var state = registeredTabs[tabId];
-            if(!state || !state.tab){
+            if(!state){
                 return;
             }
-            chrome.tabs.update(tabId,{url: state.tabUrl});
+            chrome.tabs.update(state.tabId,{url: state.tabUrl});
+            console.log("Update: " + state.tabUrl + ' ' + state.tabId);
         };
 
         return {
