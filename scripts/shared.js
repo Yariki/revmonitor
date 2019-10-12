@@ -31,7 +31,14 @@ var DomStrings = {
     findWorkRow: 'div.find-work-row:not(.table-header)',
     contentRow: '.content-row',
     dataProjectAttr: 'data-project',
-    tableCell: '.table-cell'
+    tableCell: '.table-cell',
+    claimForm: {
+        formId: '#claim-form',
+        postUrl: 'https://www.rev.com/workspace/ClaimTranslation?projectNumber=',
+        actionAttr:'action'
+    },
+    detailsNotice: '.notice',
+    claimError: '.error'
 };
 
 var Settings = {
