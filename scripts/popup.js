@@ -10,11 +10,11 @@ $(function () {
         if(updCtrl.isRegistered(tab.id)){
             var state = updCtrl.getState(tab.id);
             $('#interval').val(state.interval);
-            $('#start').addClass(!state.isRunning ? 'enabled' : 'disabled');
-            $('#stop').addClass(state.isRunning ? 'enabled' : 'disabled');
+            if(state.isRunning){
+                $('#start').attr('disabled','disabled');
+            }
         } else {
-            $('#start').addClass('enabled');
-            $('#stop').addClass('disabled');
+            $('#stop').attr('disabled','disabled');
         }
     });
     $('#start').click(function (ev) {
@@ -31,9 +31,14 @@ $(function () {
         if(updCtrl.isRegistered(tab.id)){
             var state = updCtrl.getState(tab.id);
             $('#interval').val(state.interval);
+            if(state.isRunning){
+                $('#start').attr('disabled','disabled');
+                $('#stop').removeAttr('disabled');
+            } else {
+                $('#start').removeAttr('disabled');
+                $('#stop').attr('disabled','disabled');
+            }
 
-            $('#start').addClass(!state.isRunning ? 'enabled' : 'disabled').removeClass(state.isRunning ? 'enabled': 'disabled');
-            $('#stop').addClass(state.isRunning ? 'enabled' : 'disabled').removeClass(!state.isRunning ? 'enabled' : 'disabled');
         }
     };
 });
