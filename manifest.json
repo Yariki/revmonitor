@@ -24,7 +24,8 @@
 		"tabs",
         "background",
 		"https://www.rev.com/*",
-        "storage"
+        "storage",
+        "notifications"
 	]
 
 }

@@ -185,16 +185,13 @@ var detailsPageSource = "<!doctypehtml><html lang=en-us><!--<![endif]--><head xm
 
 var notificationController = (function () {
 
-    var messages = {
-        one: "One project was claimed.",
-        more: ' projects were claimed.'
-    };
-
     var opts = {
         notification: false,
         audioNotification: false,
         soundName: ''
     };
+
+    var iconPath = chrome.extension.getURL('icons/favicon.png');
 
     chrome.storage.sync.get([Settings.notificationEnabled,
                                    Settings.soundNotificationEnabled,
@@ -207,16 +204,27 @@ var notificationController = (function () {
 
     function messageNotification(data) {
         var opt = {
+            iconUrl: iconPath,
             type: 'basic',
             title: 'Claimed.',
-            message: data.count == 1 ? messages.one : data.count + messages.more,
+            message: 'Project <' + data.ProjectId  + '> was claimed!',
         };
-        chrome.notifications.create(opt, null);
+        chrome.notifications.create('claimed',opt, function () {});
     }
 
     function soundNotification() {
         var audio = new Audio(Audios[opts.soundName]);
         audio.play();
+    }
+
+    function message(msg) {
+        var opt = {
+            iconUrl: iconPath,
+            type: 'basic',
+            title: 'Claimed.',
+            message: msg,
+        };
+        chrome.notifications.create('message',opt, function () {});
     }
 
     return {
@@ -231,12 +239,16 @@ var notificationController = (function () {
         foundNotification: function () {
             if(opts.notification){
                 var opt = {
+                    iconUrl: iconPath,
                     type: 'basic',
                     title: 'Found some projects',
                     message: 'We found some unclaimed projects',
                 };
-                chrome.notifications.create(opt, null);
+                chrome.notifications.create('found',opt, function () {});
             }
+        },
+        showMessage: function (msg) {
+            message(msg);
         }
     }
 })();
@@ -245,6 +257,9 @@ var claimController = (function (notification) {
     var _this = this;
 
     var parseProjects = function (projects) {
+
+        notification.foundNotification();
+
         for (let i = 0; i < projects.length; i++) {
             var project = projects[i];
             console.log(projects[i]);
@@ -293,6 +308,7 @@ var claimController = (function (notification) {
             return;
         }
         console.log('Done: ' + doc);
+        notification.claimedNotification(project)
     };
 
     var processErrorClaim = function (data) {
