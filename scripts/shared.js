@@ -25,6 +25,7 @@ function RevProject(projectId,language, customerName,size, price, dueTime) {
     this.DueTime = dueTime;
 }
 
+var SupportedTranslations = ['ru2en','uk2en','en2ru','en2uk'];
 
 var DomStrings = {
     projectTable: '.find-work-projects',
@@ -52,9 +53,6 @@ var RevMessages = {
     FreeProjects: 'freeprojects'
 };
 Object.freeze(RevMessages);
-
-
-
 
 var Audios = {
     bell : '',

@@ -7,7 +7,7 @@ $(function () {
         var project = projectRows[i];
         var projectId = $(project).find(DomStrings.contentRow).first().attr(DomStrings.dataProjectAttr);
         var cells = $(project).find(DomStrings.tableCell);
-        var lang = $(cells[0]).text();
+        var lang = $(cells[0]).find('span:first-child').attr('title').trim();
         var customer = $(cells[1]).text();
         var size = $(cells[2]).text();
         var price = $(cells[3]).text();

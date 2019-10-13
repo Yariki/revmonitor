@@ -262,6 +262,9 @@ var claimController = (function (notification) {
 
         for (let i = 0; i < projects.length; i++) {
             var project = projects[i];
+            if(!SupportedTranslations.includes(project.Language)){
+                continue;
+            }
             console.log(projects[i]);
             $.get(Urls.Details + project.ProjectId, (data, status) => {
                 processDetails(data,status,project);
