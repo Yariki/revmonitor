@@ -259,6 +259,10 @@ var claimController = (function (notification) {
     var parseProjects = function (projects) {
 
         notification.foundNotification();
+        console.log('found some projects');
+        for (let i = 0; i < projects.length; i++) {
+            console.log([projects[i]]);
+        }
 
         for (let i = 0; i < projects.length; i++) {
             var project = projects[i];
@@ -273,7 +277,7 @@ var claimController = (function (notification) {
     };
 
     var processDetails = function(data, status, project){
-        var doc = (new DOMParser()).parseFromString(detailsPageSource,"text/html"); // TODO: TODO: detailsPageSource only for testing purpose, need to parse 'data'
+        var doc = (new DOMParser()).parseFromString(data,"text/html"); // TODO: detailsPageSource only for testing purpose, need to parse 'data'
         var detailsPage =  $(doc);
         if(isNoticed(doc)){
             console.log("Project is not available: " + project.ProjectId);
@@ -310,12 +314,12 @@ var claimController = (function (notification) {
             console.log("Project is claimed or not available: " + project.ProjectId);
             return;
         }
-        console.log('Done: ' + doc);
+        console.log('Done: ' + data);
         notification.claimedNotification(project)
     };
 
     var processErrorClaim = function (data) {
-        console.log('Fail:' + status);
+        console.log('Fail:' + data);
     };
 
     var isNoticed = function (doc) {
@@ -331,7 +335,7 @@ var claimController = (function (notification) {
     return {
         init: function () {
             chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
-                if(msg.message == RevMessages.FreeProjects){
+                if(msg.message === RevMessages.FreeProjects){
                     parseProjects(msg.payload);
                 }
             });
@@ -381,7 +385,6 @@ var updateController = (function () {
             }
             chrome.tabs.update(state.tabId,{url: state.tabUrl});
             console.log("Update: " + state.tabUrl + ' ' + state.tabId);
-            stopMonitoring(tabId);
         };
 
         return {

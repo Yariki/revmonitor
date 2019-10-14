@@ -14,7 +14,8 @@ $(function () {
         var dueTime = $(cells[4]).text();
         projectArray.push(new RevProject(projectId,lang,customer,size,price,dueTime));
     }
-
-    chrome.runtime.sendMessage(new RevMessage(RevMessages.FreeProjects,projectArray), null);
+    if(projectArray.length > 0){
+        chrome.runtime.sendMessage(new RevMessage(RevMessages.FreeProjects,projectArray), null);
+    }
 });
 
