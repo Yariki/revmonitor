@@ -277,6 +277,7 @@ var claimController = (function (notification) {
     };
 
     var processDetails = function(data, status, project){
+        console.log(data);
         var doc = (new DOMParser()).parseFromString(data,"text/html"); // TODO: detailsPageSource only for testing purpose, need to parse 'data'
         var detailsPage =  $(doc);
         if(isNoticed(doc)){
@@ -309,12 +310,13 @@ var claimController = (function (notification) {
     };
 
     var processClaim = function (data,project) {
+        console.log(data);
         var doc = (new DOMParser()).parseFromString(data, "text/html");
         if(isError(doc)){
             console.log("Project is claimed or not available: " + project.ProjectId);
             return;
         }
-        console.log('Done: ' + data);
+        console.log('Done! Project Claimed ');
         notification.claimedNotification(project)
     };
 
