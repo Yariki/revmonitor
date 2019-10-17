@@ -280,7 +280,7 @@ var claimController = (function (notification) {
 
     var processDetails = function(data, status, project){
         console.log(data);
-        var doc = (new DOMParser()).parseFromString(detailsPageSource2,"text/html"); // TODO: detailsPageSource only for testing purpose, need to parse 'data'
+        var doc = (new DOMParser()).parseFromString(data,"text/html"); // TODO: detailsPageSource only for testing purpose, need to parse 'data'
         var detailsPage =  $(doc);
         if(isNoticed(doc)){
             console.log("Project is not available: " + project.ProjectId);
