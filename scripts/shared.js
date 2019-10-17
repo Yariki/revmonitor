@@ -36,10 +36,12 @@ var DomStrings = {
     claimForm: {
         formId: '#claim-form',
         postUrl: 'https://www.rev.com/workspace/ClaimTranslation?projectNumber=',
+        revUrl: 'https://www.rev.com/',
         actionAttr:'action'
     },
     detailsNotice: '.notice',
-    claimError: '.error'
+    claimError: '.error',
+    claimErrorPage: '.error-page'
 };
 
 var Settings = {
