@@ -1,4 +1,5 @@
 chrome.runtime.sendMessage({ action: "show"});
+
 $(function () {
     var projectRows =  document.querySelectorAll(DomStrings.findWorkRow);
     var projectArray = [];

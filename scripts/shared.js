@@ -35,7 +35,6 @@ var DomStrings = {
     tableCell: '.table-cell',
     claimForm: {
         formId: '#claim-form',
-        postUrl: 'https://www.rev.com/workspace/ClaimTranslation?projectNumber=',
         revUrl: 'https://www.rev.com/',
         actionAttr:'action'
     },
