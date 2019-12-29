@@ -1,6 +1,26 @@
 chrome.runtime.sendMessage({ action: "show"});
+var currentTimer = undefined;
 
-$(function () {
+
+
+chrome.runtime.onMessage.addListener(function(request, sender,response)  {
+    if(request.message === RevMessages.StartMonitoring && request.payload.tab === Identifiers.MonitoringPage && currentTimer === undefined){
+        currentTimer = setInterval(function(){
+            findProjects();
+        },request.payload.interval * 1000);
+    }
+});
+
+
+chrome.runtime.onMessage.addListener(function(request, sender,response)  {
+    if(request.message === RevMessages.StopMonitoring && request.payload.tab === Identifiers.MonitoringPage && currentTimer !== undefined){
+        clearInterval(currentTimer);
+        currentTimer = undefined;
+    }
+});
+
+function findProjects(){
+    console.log("Trying to find new projects...");
     var projectRows =  document.querySelectorAll(DomStrings.findWorkRow);
     var projectArray = [];
 
@@ -18,5 +38,8 @@ $(function () {
     if(projectArray.length > 0){
         chrome.runtime.sendMessage(new RevMessage(RevMessages.FreeProjects,projectArray), null);
     }
+}
+
+$(function () {
 });
 

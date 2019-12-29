@@ -232,28 +232,14 @@ var updateController = (function () {
             var state = registeredTabs[data.tab.id];
             state.interval = +data.interval;
             state.tabUrl = data.tab.url;
-            state.timer = setInterval(function () {
-                updateTab(state.tabId);
-            },state.interval * 1000);
             state.isRunning = true;
         };
 
         var stopMonitoring = function(tabId){
             var state = registeredTabs[tabId];
             if(state !== undefined){
-                clearInterval(state.timer);
-                state.timer = null;
                 state.isRunning = false;
             }
-        };
-
-        var updateTab = function(tabId){
-            var state = registeredTabs[tabId];
-            if(!state){
-                return;
-            }
-            chrome.tabs.update(state.tabId,{url: state.tabUrl});
-            console.log("Update: " + state.tabUrl + ' ' + state.tabId);
         };
 
         return {

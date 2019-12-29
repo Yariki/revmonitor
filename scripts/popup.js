@@ -18,12 +18,16 @@ $(function () {
         }
     });
     $('#start').click(function (ev) {
-        updCtrl.start(new RegisterData(tab,$('#interval').val()));
+        var intervalValue = +$('#interval').val();
+        updCtrl.start(new RegisterData(tab,intervalValue));
+        chrome.tabs.sendMessage(tab.id, new RevMessage(RevMessages.StartMonitoring, new RegisterData(Identifiers.MonitoringPage,intervalValue)));
+
         updateState();
     });
 
     $('#stop').click(function (ev) {
         updCtrl.stop(new RegisterData(tab,$('#interval').val()));
+        chrome.tabs.sendMessage(tab.id, new RevMessage(RevMessages.StopMonitoring, new RegisterData(Identifiers.MonitoringPage,0)));
         updateState();
     });
 

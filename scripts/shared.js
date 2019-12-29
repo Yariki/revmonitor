@@ -6,7 +6,6 @@ function RegisterData(tab,interval) {
 function State(tabId,interval) {
     this.tabId = tabId;
     this.interval = interval;
-    this.timer = null;
     this.isRunning = false;
     this.tabUrl = '';
 }
@@ -51,9 +50,17 @@ var Settings = {
 Object.freeze(Settings);
 
 var RevMessages = {
-    FreeProjects: 'freeprojects'
+    FreeProjects: 'freeprojects',
+    StartMonitoring: "startmonitoring",
+    StopMonitoring: "stopmonitoring"
 };
 Object.freeze(RevMessages);
+
+var Identifiers = {
+    MonitoringPage: "monitoringpage"
+};
+Object.freeze(Identifiers);
+
 
 var Audios = {
     bell : '',
