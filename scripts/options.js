@@ -4,24 +4,30 @@ $(function () {
     var soundNotificationEnabledCheckbox = $('#soundNotificationEnabled');
     var selectNameControl = $('#soundName');
 
-    chrome.storage.sync.get([Settings.notificationEnabled,Settings.soundNotificationEnabled, Settings.soundName], function (items) {
-        if(items[Settings.notificationEnabled] !== undefined){
-            notificationEnabledCheckbox.prop('checked', (items[Settings.notificationEnabled]));
-        } else {
-            notificationEnabledCheckbox.val(true);
-        }
-        if(items[Settings.soundNotificationEnabled]  !== undefined){
-            var val = items[Settings.soundNotificationEnabled]
-            soundNotificationEnabledCheckbox.prop('checked',val);
-            updateState(val);
-        } else {
-            soundNotificationEnabledCheckbox.val(false);
-        }
-        if(items[Settings.soundName] !== undefined){
-            selectNameControl.val(items[Settings.soundName]);
-        }
-    });
+    try{
 
+        chrome.storage.sync.get([Settings.notificationEnabled,Settings.soundNotificationEnabled, Settings.soundName], function (items) {
+            if(items[Settings.notificationEnabled] !== undefined){
+                notificationEnabledCheckbox.prop('checked', (items[Settings.notificationEnabled]));
+            } else {
+                notificationEnabledCheckbox.val(true);
+            }
+            if(items[Settings.soundNotificationEnabled]  !== undefined){
+                var val = items[Settings.soundNotificationEnabled]
+                soundNotificationEnabledCheckbox.prop('checked',val);
+                updateState(val);
+            } else {
+                soundNotificationEnabledCheckbox.val(false);
+            }
+            if(items[Settings.soundName] !== undefined){
+                selectNameControl.val(items[Settings.soundName]);
+            }
+        });
+
+
+    }catch (e) {
+        console.log(e);
+    }
 
     soundNotificationEnabledCheckbox.change(function () {
         var value = soundNotificationEnabledCheckbox.prop('checked');
