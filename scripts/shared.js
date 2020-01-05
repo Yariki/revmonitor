@@ -63,3 +63,39 @@ var Audios = {
 
 Audios.bell = chrome.extension.getURL('audio/bell.ogg');
 Audios.cuckoo =chrome.extension.getURL('audio/cuckoo.ogg');
+
+
+var Rule = function (id, startTime, endTime, wordsCount, pagesCount ) {
+    var id = id;
+    var start = +startTime;
+    var end = +endTime;
+    var words = +wordsCount;
+    var pages = +pagesCount;
+
+    var startLong = new Date(0,0,0,start,0,0).getTime();
+    var endLong = new Date(0,0,0,end,0,0).getTime();
+
+
+    return {
+        isValidTime: function (time) {
+            return startLong <= time && time <= endLong;
+        },
+        isWordCountSuitable: function (projectWords) {
+            return words <= projectWords;
+        },
+        isPageCountSuitable: function (projectPages) {
+            return pages <= projectPages;
+        },
+        getId: function(){
+            return id;
+        },
+        getSettingObject: function () {
+            return {
+                start: start,
+                end: end,
+                words: words,
+                pages: pages
+            }
+        }
+    }
+};
