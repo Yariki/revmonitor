@@ -11,18 +11,20 @@ var settingsController = (function(){
 
     return {
         init: function(callback){
-            chrome.storage.sync.get([Settings.notificationEnabled,Settings.soundNotificationEnabled, Settings.soundName], function (items) {
+            chrome.storage.sync.get([Settings.notificationEnabled,Settings.soundNotificationEnabled, Settings.soundName, Settings.rules], function (items) {
                 opt.notificationEnabled = items.notificationEnabled;
                 opt.soundNotificationEnabled = items.soundNotificationEnabled;
                 opt.soundName = items.soundName;
                 opt.rules = items.rules;
 
-                // if(opt.rules !== undefined && opt.rules.length > 0){
-                //     var index = 1;
-                //     opt.rules.forEach(value => {
-                //
-                //     });
-                // }
+                if(opt.rules !== undefined && opt.rules.length > 0){
+                    var index = 1;
+                    opt.rules.forEach(value => {
+                        value.id = index;
+                        rules.splice(rules.length,0,new  Rule(index,value.start, value.end, value.words, value.pages));
+                        index += 1;
+                    });
+                }
 
                 callback(opt);
             });
@@ -31,7 +33,12 @@ var settingsController = (function(){
             return opt;
         },
         saveSettings: function (settings) {
-            chrome.storage.sync.set(settings);
+            opt = settings;
+            opt.rules = [];
+            for (let i = 0; i < rules.length; i++) {
+                opt.rules.splice(opt.rules.length,0,rules[i].getSettingObject());
+            }
+            chrome.storage.sync.set(opt);
         },
         addRule: function (rule) {
             rules.splice(rules.length, 0, rule);
@@ -43,17 +50,56 @@ var settingsController = (function(){
         },
         getMaxId: function() {
             if(rules === undefined || rules.length === 0){
-                return 1;
+                return 0;
             }
             let max = rules[0].getId();
             rules.forEach(r => max = Math.max(r.getId(),max));
             return max;
-        }
+        },
+        isStartTimePresent: function (startTime) {
+            var result = false;
 
+            for (let i = 0; i < rules.length; i++) {
+                result = rules[i].start() === startTime;
+                if(result){
+                    break;
+                }
+            }
+            return result;
+        },
+        isEndTimePresent: function (endTime) {
+            var result = false;
+
+            for (let i = 0; i < rules.length; i++) {
+                result = rules[i].end() === endTime;
+                if(result){
+                    break;
+                }
+            }
+            return result;
+        },
+        isTimeBetween: function (time) {
+            var result = false;
+            for (let i = 0; i < rules.length; i++) {
+                result =  rules[i].start() < time && time < rules[i].end();
+                if(result){
+                    break;
+                }
+            }
+            return result;
+        }
     }
 })();
 
 var uiController = (function(settingCtrl){
+
+    var validState = {
+        startTime: true,
+        endTime: true,
+        words: false,
+        pages: false,
+    };
+
 
     var domStrings = {
         notificationEnabledUI: '#notificationEnabled',
@@ -116,6 +162,22 @@ var uiController = (function(settingCtrl){
         if(settings[Settings.soundName] !== undefined){
             selectNameControl.val(settings[Settings.soundName]);
         }
+
+        if(settings.rules !== undefined && settings.rules.length > 0){
+            for (let i = 0; i < settings.rules.length; i++) {
+                let rule = settings.rules[i];
+                addRuleToList(rule.id, rule.start, rule.end, rule.words, rule.pages);
+            }
+        }
+    }
+
+    function addRuleToList(id,start,end,words, pages ) {
+        var newHtml = html.replace('%id%',id)
+            .replace('%start%',start)
+            .replace('%end%',end)
+            .replace('%w%',words)
+            .replace('%p%',pages);
+        document.querySelector(domStrings.ruleList).insertAdjacentHTML('beforeend',newHtml);
     }
 
     function addRuleBtnClick() {
@@ -137,8 +199,106 @@ var uiController = (function(settingCtrl){
     }
 
     function deleteRuleBtnClick(ev) {
+        var parentId;
+
+        var id = ev.target.parentNode.parentNode.parentNode.id;
+
+        if(id){
+            var parts = id.split('-');``
+
+            console.log('parentNode  id = ' + parts[1]);
+
+            var el = document.getElementById(id);
+            el.parentNode.removeChild(el);
+
+            settingCtrl.deleteRule(+parts[1]);
+
+        }
+    }
+
+    function startTimeChanged(data){
+        var start = +startTimeSelect.val();
+
+        if(settingCtrl.isStartTimePresent(start) || settingCtrl.isTimeBetween(start)){
+            validState.startTime = false;
+            updateUiState();
+            return;
+        }
+
+        validState.startTime = true;
+        updateUiState();
 
     }
+
+    function endTimeChanged(data) {
+        var end = +endTimeSelect.val();
+
+        if(settingCtrl.isEndTimePresent(end) || settingCtrl.isTimeBetween(end)){
+            validState.endTime = false;
+            updateUiState();
+            return;
+        }
+
+        validState.endTime = true;
+        updateUiState();
+
+    }
+
+    function wordsCountChanged(data) {
+        var words = +wordsCtrl.val();
+
+        validState.words = words > 0;
+        updateUiState();
+    }
+
+    function pagesCountChanged(data) {
+        var pages = +pagesCtrl.val();
+        validState.pages = pages > 0;
+        updateUiState();
+    }
+
+    function updateUiState(){
+
+        if(validState.startTime){
+            startTimeSelect.parent().removeClass('is-danger').addClass('is-primary');
+        } else {
+            startTimeSelect.parent().removeClass('is-primary').addClass('is-danger');
+        }
+
+        if(validState.endTime){
+            endTimeSelect.parent().removeClass('is-danger').addClass('is-primary');
+        } else {
+            endTimeSelect.parent().removeClass('is-primary').addClass('is-danger');
+        }
+
+        if(validState.words){
+            wordsCtrl.removeClass('is-danger').addClass('is-primary');
+        } else {
+            wordsCtrl.removeClass('is-primary').addClass('is-danger');
+        }
+
+        if(validState.pages){
+            pagesCtrl.removeClass('is-danger').addClass('is-primary');
+        } else {
+            pagesCtrl.removeClass('is-primary').addClass('is-danger');
+        }
+
+        if(validState.startTime && validState.endTime && validState.words && validState.pages){
+            enableAddButton();
+        } else {
+            disableAddButton();
+        }
+    }
+
+
+    function disableAddButton() {
+        addRuleBtn.attr('disabled', 'disabled');
+    }
+
+    function enableAddButton() {
+        addRuleBtn.removeAttr('disabled');
+    }
+
 
 
     function init(){
@@ -154,6 +314,13 @@ var uiController = (function(settingCtrl){
         addRuleBtn.click(addRuleBtnClick);
 
         document.querySelector(domStrings.ruleList).addEventListener('click',deleteRuleBtnClick);
+
+        startTimeSelect.change(startTimeChanged);
+        endTimeSelect.change(endTimeChanged);
+        wordsCtrl.change(wordsCountChanged);
+        pagesCtrl.change(pagesCountChanged);
+
+        updateUiState();
     }
 
     function updateState(val) {

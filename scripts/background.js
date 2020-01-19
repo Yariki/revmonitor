@@ -118,6 +118,37 @@ var notificationController = (function () {
 var claimController = (function (notification) {
     var _this = this;
 
+    var rules = [];
+
+    chrome.storage.sync.get([Settings.rules],function (items) {
+
+        if(items.rules !== undefined && items.rules.length > 0){
+            var index = 1;
+            items.rules.forEach(value => {
+                value.id = index;
+                rules.splice(rules.length,0,new  Rule(index,value.start, value.end, value.words, value.pages));
+                index += 1;
+            });
+        }
+    });
+
+
+    var getRule = function () {
+        var current = new Date().getTime();
+        for (let i = 0; i < rules.length; i++) {
+            if(rules[i].isValidTime(current)){
+                return rules[i];
+            }
+        }
+        return undefined;
+    };
+
+    var validateProject = function (project) {
+         var rule = getRule();
+         return rule !== undefined? project.IsWords ? rule.isWordCountSuitable(project.Size) : rule.isPageCountSuitable(project.Size) : false;
+    };
+
+
     var parseProjects = function (projects) {
 
         //notification.foundNotification();
@@ -131,6 +162,12 @@ var claimController = (function (notification) {
             if(!SupportedTranslations.includes(project.Language)){
                 continue;
             }
+
+            if(!validateProject(project)){
+                console.log("Project is nod valid: " + project);
+                continue;
+            }
+
             console.log(projects[i]);
             $.get(Urls.Details + project.ProjectId, (data, status) => {
                 processDetails(data,status,project);
