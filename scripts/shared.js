@@ -26,7 +26,7 @@ function RevProject(projectId,language, customerName,length, payTotal, payMin, d
     this.DueTime = dueTime;
 }
 
-var SupportedTranslations = ['ru2en','uk2en','en2ru','en2uk'];
+var SupportedTranslations = ['Russian', 'English', 'Ukrainian'];
 
 var DomStrings = {
     projectTable: '.find-work-projects',

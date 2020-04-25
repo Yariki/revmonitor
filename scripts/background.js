@@ -1,7 +1,7 @@
 var Urls = (function () {
     return {
         Details: 'https://www.rev.com/workspace/project/',
-        Claim: 'https://www.rev.com/workspace/ClaimTranslation?projectNumber=',
+        Claim: 'https://www.rev.com/workspace/ClaimSubtitle?projectNumber=',
         RevUrl: 'https://www.rev.com/'
     }
 })();
