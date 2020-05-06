@@ -16,16 +16,17 @@ function RevMessage(message, payload) {
     this.payload = payload;
 }
 
-function RevProject(projectId,language, customerName,size, price, dueTime) {
+function RevProject(projectId,language, customerName,length, payTotal, payMin, dueTime) {
     this.ProjectId = projectId;
     this.Language = language;
     this.CustomerName = customerName;
-    this.Size = size;
-    this.Price = price;
+    this.Length = length;
+    this.PayTotal = payTotal;
+    this.PayMin = payMin;
     this.DueTime = dueTime;
 }
 
-var SupportedTranslations = ['ru2en','uk2en','en2ru','en2uk'];
+var SupportedTranslations = ['Russian', 'English', 'Ukrainian'];
 
 var DomStrings = {
     projectTable: '.find-work-projects',
