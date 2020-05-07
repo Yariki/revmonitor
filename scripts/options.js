@@ -21,7 +21,7 @@ var settingsController = (function(){
                     var index = 1;
                     opt.rules.forEach(value => {
                         value.id = index;
-                        rules.splice(rules.length,0,new  Rule(index,value.start, value.end, value.words, value.pages));
+                        rules.splice(rules.length,0,new  Rule(index,value.start, value.end, value.hours, value.minutes, value.seconds));
                         index += 1;
                     });
                 }
@@ -96,8 +96,9 @@ var uiController = (function(settingCtrl){
     var validState = {
         startTime: true,
         endTime: true,
-        words: false,
-        pages: false,
+        hours: false,
+        minutes: false,
+        seconds: false,
     };
 
 
@@ -111,8 +112,9 @@ var uiController = (function(settingCtrl){
         ruleList: '#rulesBody',
         startSelect: '#start',
         endSelect: '#end',
-        wordCtrl: '#wordcount',
-        pagesCtrl: '#pagescount'
+        hoursCtrl: '#hour',
+        minutesCtrl: '#min',
+        secondsCtrl: '#sec'
     };
 
 
@@ -124,9 +126,10 @@ var uiController = (function(settingCtrl){
     var addRuleBtn = undefined;
     var startTimeSelect = undefined;
     var endTimeSelect = undefined;
-    var wordsCtrl = undefined;
-    var pagesCtrl = undefined;
-    const html = "<tr id=\"rule-%id%\"><td>%start%:00</td><td>%end%:00</td><td>%w%</td><td>%p%</td><td><button class=\"button is-danger\"><i class=\"fas fa-minus\"></i></button></td></tr>";
+    var hoursCtrl = undefined;
+    var minutesCtrl = undefined;
+    var secondsCtrl = undefined;
+    const html = "<tr id=\"rule-%id%\"><td>%start%:00</td><td>%end%:00</td><td>%h%</td><td>%m%</td><td>%s%</td><td><button class=\"button is-danger\"><i class=\"fas fa-minus\"></i></button></td></tr>";
 
 
 
@@ -166,17 +169,18 @@ var uiController = (function(settingCtrl){
         if(settings.rules !== undefined && settings.rules.length > 0){
             for (let i = 0; i < settings.rules.length; i++) {
                 let rule = settings.rules[i];
-                addRuleToList(rule.id, rule.start, rule.end, rule.words, rule.pages);
+                addRuleToList(rule.id, rule.start, rule.end, rule.hours, rule.minutes,rule.seconds);
             }
         }
     }
 
-    function addRuleToList(id,start,end,words, pages ) {
+    function addRuleToList(id,start,end,h, m, s ) {
         var newHtml = html.replace('%id%',id)
             .replace('%start%',start)
             .replace('%end%',end)
-            .replace('%w%',words)
-            .replace('%p%',pages);
+            .replace('%h%',h)
+            .replace('%m%',m)
+            .replace('%s%',s);
         document.querySelector(domStrings.ruleList).insertAdjacentHTML('beforeend',newHtml);
     }
 
@@ -184,17 +188,18 @@ var uiController = (function(settingCtrl){
 
         var start = startTimeSelect.val();
         var end = endTimeSelect.val();
-        var words = wordsCtrl.val();
-        var pages = pagesCtrl.val();
+        var h = hoursCtrl.val();
+        var m = minutesCtrl.val();
+        var s = secondsCtrl.val();
         var id = settingCtrl.getMaxId() + 1;
         var newHtml = html.replace('%id%',id)
             .replace('%start%',start)
             .replace('%end%',end)
-            .replace('%w%',words)
-            .replace('%p%',pages);
+            .replace('%h%',h)
+            .replace('%m%',m)
+            .replace("%s%",s);
 
-
-        settingCtrl.addRule(new Rule(id, start, end,words, pages));
+        settingCtrl.addRule(new Rule(id, start, end,h, m,s));
         document.querySelector(domStrings.ruleList).insertAdjacentHTML('beforeend',newHtml);
     }
 
@@ -244,16 +249,14 @@ var uiController = (function(settingCtrl){
 
     }
 
-    function wordsCountChanged(data) {
-        var words = +wordsCtrl.val();
+    function valueCountChanged(data) {
+        var hoursVal = +hoursCtrl.val();
+        validState.hours = hoursVal >= 0;
+        var minVal = +minutesCtrl.val();
+        validState.minutes = minVal >= 0;
+        var secVal = +secondsCtrl.val();
+        validState.seconds = secVal >= 0;
 
-        validState.words = words > 0;
-        updateUiState();
-    }
-
-    function pagesCountChanged(data) {
-        var pages = +pagesCtrl.val();
-        validState.pages = pages > 0;
         updateUiState();
     }
 
@@ -271,25 +274,30 @@ var uiController = (function(settingCtrl){
             endTimeSelect.parent().removeClass('is-primary').addClass('is-danger');
         }
 
-        if(validState.words){
-            wordsCtrl.removeClass('is-danger').addClass('is-primary');
+        if(validState.hours){
+            hoursCtrl.removeClass('is-danger').addClass('is-primary');
         } else {
-            wordsCtrl.removeClass('is-primary').addClass('is-danger');
+            hoursCtrl.removeClass('is-primary').addClass('is-danger');
         }
 
-        if(validState.pages){
-            pagesCtrl.removeClass('is-danger').addClass('is-primary');
+        if(validState.minutes){
+            minutesCtrl.removeClass('is-danger').addClass('is-primary');
         } else {
-            pagesCtrl.removeClass('is-primary').addClass('is-danger');
+            minutesCtrl.removeClass('is-primary').addClass('is-danger');
         }
 
-        if(validState.startTime && validState.endTime && validState.words && validState.pages){
+        if(validState.seconds){
+            secondsCtrl.removeClass('is-danger').addClass('is-primary');
+        } else {
+            secondsCtrl.removeClass('is-primary').addClass('is-danger');
+        }
+
+        if(validState.startTime && validState.endTime && validState.hours && validState.minutes && validState.seconds){
             enableAddButton();
         } else {
             disableAddButton();
         }
     }
-
 
     function disableAddButton() {
         addRuleBtn.attr('disabled', 'disabled');
@@ -298,8 +306,6 @@ var uiController = (function(settingCtrl){
     function enableAddButton() {
         addRuleBtn.removeAttr('disabled');
     }
-
-
 
     function init(){
         soundNotificationEnabledCheckbox.change(function () {
@@ -317,10 +323,12 @@ var uiController = (function(settingCtrl){
 
         startTimeSelect.change(startTimeChanged);
         endTimeSelect.change(endTimeChanged);
-        wordsCtrl.change(wordsCountChanged);
-        pagesCtrl.change(pagesCountChanged);
+        hoursCtrl.change(valueCountChanged);
+        minutesCtrl.change(valueCountChanged);
+        secondsCtrl.change(valueCountChanged);
 
         updateUiState();
+        valueCountChanged(null);
     }
 
     function updateState(val) {
@@ -344,8 +352,9 @@ var uiController = (function(settingCtrl){
             addRuleBtn = $(domStrings.addRuleBtn);
             startTimeSelect = $(domStrings.startSelect);
             endTimeSelect = $(domStrings.endSelect);
-            wordsCtrl = $(domStrings.wordCtrl);
-            pagesCtrl = $(domStrings.pagesCtrl);
+            hoursCtrl = $(domStrings.hoursCtrl);
+            minutesCtrl = $(domStrings.minutesCtrl);
+            secondsCtrl = $(domStrings.secondsCtrl);
 
             init();
         },

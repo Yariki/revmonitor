@@ -120,17 +120,25 @@
         </div>
         <div class="level-item has-text-centered">
             <div>
-                <p class="heading">Word(s)</p>
+                <p class="heading">Hour(s)</p>
                 <p class="title">
-                    <input type="number" id="wordcount" name="wordcount" class="input is-primary">
+                    <input type="number" id="hour" name="hour" class="input is-primary" value="0" min="0">
                 </p>
             </div>
         </div>
         <div class="level-item has-text-centered">
             <div>
-                <p class="heading">Page(s)</p>
+                <p class="heading">Min(s)</p>
                 <p class="title">
-                    <input type="number" id="pagescount" name="pagescount" class="input is-primary">
+                    <input type="number" id="min" name="min" class="input is-primary" value="0" min="0" max="60">
+                </p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Sec(s)</p>
+                <p class="title">
+                    <input type="number" id="sec" name="sec" class="input is-primary" value="0" min="0" max="60">
                 </p>
             </div>
         </div>
@@ -147,12 +155,13 @@
 
     <div class="level">
 
-        <table id="ruulesTable" class="table">
+        <table id="rulesTable" class="table">
             <thead>
                 <th>Start time</th>
                 <th>End time</th>
-                <th>Word(s)</th>
-                <th>Page(s)</th>
+                <th>Hour(s)</th>
+                <th>Min(s)</th>
+                <th>Seconds</th>
                 <th></th>
             </thead>
             <tbody id="rulesBody" class="table-container">
