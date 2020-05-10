@@ -40,6 +40,72 @@ function showPageActionForRev(tab) {
 }
 
 
+let lengthValidatorController = (function(){
+
+    let rules = [];
+
+    chrome.storage.sync.get([Settings.rules], function (items) {
+
+        if (items.rules !== undefined
+            && items.rules.length > 0 ){
+            var index = 1;
+            items.rules.forEach(value => {
+                value.id = index;
+                rules.splice(rules.length,0,new  Rule(index,value.start, value.end, value.hours, value.minutes, value.seconds));
+                index += 1;
+            });
+        }
+    });
+
+    function getRule() {
+        let current = new Date().getTime();
+        for (let i = 0; i < rules.length; i++) {
+            if(rules[i].isValidTime(current)){
+                return rules[i];
+            }
+        }
+        return undefined;
+    }
+
+    function validTime(time){
+        let parts = time.split(':');
+
+        let rule = getRule();
+
+        if(rule === undefined || parts === undefined || parts.empty()){
+            return false;
+        }
+
+        if( parts.length === 3){
+            let hours = +parts[0];
+            let min = +parts[1];
+            let sec = parts[2];
+
+            if (rule.isHoursValid(hours) && rule.isMinValid(min) && rule.isSecValid(sec)){
+                return true;
+            }
+        } else if (parts.length === 2){
+            let min = +parts[0];
+            let sec = parts[1];
+
+            if (rule.isMinValid(min) && rule.isSecValid(sec)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    return {
+        isValidLength: function (time) {
+            return validTime(time);
+        },
+        anyRules: function () {
+            return rules.length > 0;
+        }
+    }
+
+})();
+
 
 var notificationController = (function () {
 
@@ -111,60 +177,28 @@ var notificationController = (function () {
     }
 })();
 
-var claimController = (function (notification) {
+var claimController = (function (notification, lengthValidator) {
     var _this = this;
-
-    var rules = [];
-
-    chrome.storage.sync.get([Settings.rules],function (items) {
-
-        if(items.rules !== undefined && items.rules.length > 0){
-            var index = 1;
-            items.rules.forEach(value => {
-                value.id = index;
-                rules.splice(rules.length,0,new  Rule(index,value.start, value.end, value.words, value.pages));
-                index += 1;
-            });
-        }
-    });
-
-
-    var getRule = function () {
-        var current = new Date().getTime();
-        for (let i = 0; i < rules.length; i++) {
-            if(rules[i].isValidTime(current)){
-                return rules[i];
-            }
-        }
-        return undefined;
-    };
-
-    var validateProject = function (project) {
-         var rule = getRule();
-         return rule !== undefined? project.IsWords ? rule.isWordCountSuitable(project.Size) : rule.isPageCountSuitable(project.Size) : false;
-    };
-
 
     var parseProjects = function (projects) {
 
         //notification.foundNotification();
         console.log('found some projects');
-        for (let i = 0; i < projects.length; i++) {
-            console.log([projects[i]]);
-        }
 
         for (let i = 0; i < projects.length; i++) {
             var project = projects[i];
+
+            console.log(project);
+
             if(!SupportedTranslations.includes(project.Language)){
                 continue;
             }
 
-            if(!validateProject(project)){
+            if(lengthValidator.anyRules() && !lengthValidator.isValidLength(project.Length)){
                 console.log("Project is nod valid: " + project);
                 continue;
             }
 
-            console.log(projects[i]);
             $.get(Urls.Details + project.ProjectId, (data, status) => {
                 processDetails(data,status,project);
             });
@@ -244,7 +278,7 @@ var claimController = (function (notification) {
         }
     }
 
-})(notificationController);
+})(notificationController, lengthValidatorController);
 
 var updateController = (function () {
         var registeredTabs = {};

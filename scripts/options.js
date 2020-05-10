@@ -366,17 +366,6 @@ var uiController = (function(settingCtrl){
 })(settingsController);
 
 
-
-var globalController = (function(){
-
-    return {
-        init : function(){
-
-        }
-    }
-})();
-
-
 $(function () {
 
     settingsController.init(uiController.populateUi);

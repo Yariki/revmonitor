@@ -103,6 +103,7 @@ var Rule = function (id, startTime, endTime, hoursCount, minutesCount, secondsCo
 
     return {
         isValidTime: function (time) {
+            console.log(startLong + ' - '+ time + ' - ' + endLong);
             return startLong <= time && time <= endLong;
         },
         isMinValid: function (min) {
@@ -111,7 +112,7 @@ var Rule = function (id, startTime, endTime, hoursCount, minutesCount, secondsCo
         isSecValid: function (sec) {
             return seconds <= sec;
         },
-        ifHoursValid(hr){
+        isHoursValid(hr){
             return hours <= hr;
         },
         getId: function(){
