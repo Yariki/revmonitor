@@ -77,32 +77,26 @@ var Rule = function (id, startTime, endTime, hoursCount, minutesCount, secondsCo
     var startLong = -1;
     var endLong = -1;
 
-    var temp = new Date();
-    var y = temp.getFullYear();
-    var m = temp.getMonth();
-    var d = temp.getDate();
 
+    function calculateDates() {
+        var temp = new Date();
+        var y = temp.getFullYear();
+        var m = temp.getMonth();
+        var d = temp.getDate();
 
-    // TODO: need to add functionality for checking when date is changed and recreate rules.
+        if(start == 0 && end == 0){
+            startLong = new Date(y,m,d,start,0,0).getTime();
+            endLong = new Date(y,m,d,23,59,59).getTime();
 
-    if(start == 0 && end == 0){
-
-        startLong = new Date(y,m,d,start,0,0).getTime();
-        endLong = new Date(y,m,d,23,59,59).getTime();
-
-    }else if (start > end){
-        var current = new Date().getDate();
-
-        startLong = new Date(y,m,current,start,0,0).getTime();
-        endLong = new Date(y,m,current + 1,end,59,59).getTime();
-
-    } else{
-        startLong = new Date(y,m,d,start,0,0).getTime();
-        endLong = new Date(y,m,d,end,59,59).getTime();
+        } else{
+            startLong = new Date(y,m,d,start,0,0).getTime();
+            endLong = new Date(y,m,d,end,59,59).getTime();
+        }
     }
 
     return {
         isValidTime: function (time) {
+            calculateDates();
             console.log(startLong + ' - '+ time + ' - ' + endLong);
             return startLong <= time && time <= endLong;
         },
