@@ -79,14 +79,14 @@ let lengthValidatorController = (function(){
         if( parts.length === 3){
             let hours = +parts[0];
             let min = +parts[1];
-            let sec = parts[2];
+            let sec = +parts[2];
 
             if (rule.isHoursValid(hours) && rule.isMinValid(min) && rule.isSecValid(sec)){
                 return true;
             }
         } else if (parts.length === 2){
             let min = +parts[0];
-            let sec = parts[1];
+            let sec = +parts[1];
 
             if (rule.isMinValid(min) && rule.isSecValid(sec)){
                 return true;

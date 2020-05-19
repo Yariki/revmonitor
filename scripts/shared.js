@@ -24,8 +24,7 @@ function RevProject(projectId,language, customerName,length, payTotal, payMin, d
     this.PayTotal = payTotal;
     this.PayMin = payMin;
     this.DueTime = dueTime;
-    this.IsWords = isWords;
-}
+
 
 var SupportedTranslations = ['Russian', 'English', 'Ukrainian'];
 
