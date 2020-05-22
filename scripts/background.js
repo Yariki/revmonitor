@@ -72,7 +72,7 @@ let lengthValidatorController = (function(){
 
         let rule = getRule();
 
-        if(rule === undefined || parts === undefined || parts.empty()){
+        if(rule === undefined || parts === undefined || parts.length == 0){
             return false;
         }
 

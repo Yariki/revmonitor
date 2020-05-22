@@ -6,14 +6,14 @@ $(function () {
 
     for(let  i = 0; i < projectRows.length;i++){
         var project = projectRows[i];
-        var projectId = $(project).find(DomStrings.contentRow).first().attr(DomStrings.dataProjectAttr);
+        var projectId = $(project).find(DomStrings.contentRow).first().attr(DomStrings.dataProjectAttr).trim();
         var cells = $(project).find(DomStrings.tableCell);
-        var customer = $(cells[0]).text();
-        var length = $(cells[1]).text();
-        var payTotal = $(cells[2]).text();
-        var payMin = $(cells[3]).text();
-        var lang = $(cells[4]).text();
-        var dueTime = $(cells[5]).text();
+        var customer = $(cells[0]).text().trim();
+        var length = $(cells[1]).text().trim();
+        var payTotal = $(cells[2]).text().trim();
+        var payMin = $(cells[3]).text().trim();
+        var lang = $(cells[4]).text().trim();
+        var dueTime = $(cells[5]).text().trim();
 
         projectArray.push(new RevProject(projectId,lang,customer,length,payTotal, payMin,dueTime));
     }

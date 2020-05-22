@@ -15,7 +15,7 @@
     },
     "content_scripts": [
       {
-          "matches":["https://www.rev.com/workspace/*", "file:///D:/Sources/Web/RevSiteExample/*", "file:///D:/Sources/Web/RevSiteSubtitleSample/*"],
+          "matches":["https://www.rev.com/workspace/*", "file:///D:/Sources/Web/RevSiteExample/*", "file:///D:/Sources/Web/RevSiteSubtitleSample/*", "file:///D:/Data/RevMon/*"],
           "js": ["libs/jquery/jquery-3.4.0.js", "scripts/shared.js", "scripts/content.js"]
       }
     ],
